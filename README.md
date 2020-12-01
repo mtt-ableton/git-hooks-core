@@ -1,6 +1,7 @@
 # git-hooks-core
 
 > *An opinionated use of the `core.hooksPath` feature released in Git 2.9.*
+> forked from https://github.com/pivotal-cf/git-hooks-core
 
 ## ABOUT
 
@@ -19,26 +20,6 @@ And now that the hooks dir is outside of your repository, you can commit the glo
 
 ## INSTALLATION
 
-### Installing cred-alert-cli
-
-This repo comes with some hooks that depend on `cred-alert-cli`.
-
-To install the `cred-alert-cli` binary download the version for your OS
-([macOs][cred-alert-osx] or [Linux][cred-alert-linux]), rename it to `cred-alert-cli`,
-make it executable, and move it to a directory in `${PATH}`.
-
-```
-os_name=$(uname | awk '{print tolower($1)}')
-curl -o cred-alert-cli \
-  https://s3.amazonaws.com/cred-alert/cli/current-release/cred-alert-cli_${os_name}
-chmod 755 cred-alert-cli
-mv cred-alert-cli /usr/local/bin # <= or other directory in ${PATH}
-cred-alert-cli --help # <= make sure cred-alert-cli works.
-```
-
-[cred-alert-osx]: https://s3.amazonaws.com/cred-alert/cli/current-release/cred-alert-cli_darwin
-[cred-alert-linux]: https://s3.amazonaws.com/cred-alert/cli/current-release/cred-alert-cli_linux
-
 ### Installing git-hooks-core
 
 Clone this repo to your directory of choice, e.g. $HOME/workspace/git-hooks-core.
@@ -46,7 +27,7 @@ Point `core.hooksPath` at the installation directory.
 
 ```
 git clone https://github.com/pivotal-cf/git-hooks-core $HOME/workspace/git-hooks-core
-git config --global --add core.hooksPath $HOME/workspace/git-hooks-core
+(cd git-hooks-core && git config --global --add core.hooksPath $PWD)
 ```
 
 ### (Optional) Adding global hooks
@@ -103,32 +84,20 @@ called `add_footer`, you would:
 ## VERIFY IT ALL WORKS
 
 ```
-mkdir $HOME/workspace/cred-alert-test; cd $HOME/workspace/cred-alert-test; git init; cat <<'EOF'>> test.key
+mkdir $HOME/workspace/cred-alert-test; cd $HOME/workspace/cred-alert-test; git init;
+echo "test" >> README.md; git add README.md; git commit --no-verify -m"initial commit"
+cat <<'EOF'>> test.key
 -----BEGIN RSA PRIVATE KEY-----
 fakersakeydata
+wipwip <--- this word is in the blacklist
 -----END RSA PRIVATE KEY-----
 EOF
 git add test.key;
-git commit -m "Testing credential commit" # You should see a warning after this command
+git commit -m "Testing blacklisted keyword commit" # You should see a warning after this command
 mv $HOME/workspace/cred-alert-test /tmp
 ```
-
-## CUSTOMIZATION
-
-If you're a Pivotal team and you would like your own collection of hooks then
-please add a branch to this repository with the name `team/<team-name>`. For example,
-if I was on a security team I would push a branch to `team/pcf-security`. We originally
-wanted to have people fork this repository but that requires administrator access
-for the destination organization.
-
-If you use `sprout-git` to install this then you can use the `sprout.git.hooks.revision`
-attribute to set the branch you would like to use.
 
 ## LINKS
 
 * [githooks](https://git-scm.com/docs/githooks)
 
-CLI Binaries:
-
-* [OSX][cred-alert-osx]
-* [Linux][cred-alert-linux]
