@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-matches=$(git diff-index --patch HEAD | grep '^+' | grep -i 'wipwip')
+matches=$(git diff --staged | grep '^+' | grep -i 'wipwip')
 
 if [ ! -z "$matches" ]
 then
