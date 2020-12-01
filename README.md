@@ -30,6 +30,10 @@ git clone https://github.com/pivotal-cf/git-hooks-core $HOME/workspace/git-hooks
 (cd git-hooks-core && git config --global --add core.hooksPath $PWD)
 ```
 
+If you are on windows, you may have to recreate the symbolic links yourself.
+See for example https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
+for a tutorial and good explorer add-on about this.
+
 ### (Optional) Adding global hooks
 
 Add any global hooks you'd like to their respective *.d* folder:
