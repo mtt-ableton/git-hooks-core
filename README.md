@@ -28,11 +28,9 @@ Point `core.hooksPath` at the installation directory.
 ```
 git clone https://github.com/pivotal-cf/git-hooks-core $HOME/workspace/git-hooks-core
 (cd git-hooks-core && git config --global --add core.hooksPath $PWD)
+# windows only, fix symlinks
+ls | grep ".d/$" | grep --invert-match "whitelists" | sed -E 's/(.*)\.d\//\1/' | xargs -d $'\n' sh -c 'for arg do rm $arg -f && cmd.exe "/c mklink $arg .base-hook"; done' _
 ```
-
-If you are on windows, you may have to recreate the symbolic links yourself.
-See for example https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
-for a tutorial and good explorer add-on about this.
 
 ### (Optional) Adding global hooks
 
